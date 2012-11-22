@@ -16,26 +16,135 @@
 
 -->
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
 
-	<changeSet id="1" author="endy">
-		<createTable tableName="c_application_config">
-			<column name="id" type="varchar(255)">
-				<constraints primaryKey="true" nullable="false" />
-			</column>
-			<column name="name" type="varchar(255)">
-				<constraints unique="true" nullable="false" />
-			</column>
-			<column name="label" type="varchar(255)">
-				<constraints nullable="false" />
-			</column>
-			<column name="value" type="varchar(255)">
-				<constraints nullable="false" />
-			</column>
-		</createTable>
-		<modifySql dbms="mysql">
-			<append value=" engine innodb" />
-		</modifySql>
-	</changeSet>
+    <changeSet id="1" author="endy">
+        <createTable tableName="c_application_config">
+            <column name="id" type="varchar(255)">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints unique="true" nullable="false" />
+            </column>
+            <column name="label" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="value" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <modifySql dbms="mysql">
+            <append value=" engine innodb" />
+        </modifySql>
+    </changeSet>
+    
+    <changeSet id="2" author="adi">
+        
+        <createTable tableName="m_barang">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="kode_barang" type="varchar(8)">
+                <constraints unique="true" nullable="false" />
+            </column>
+            <column name="nama_barang" type="varchar(30)">
+                <constraints nullable="false" />
+            </column>
+            <column name="harga_barang" type="decimal(19,2)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        
+        <createTable tableName="m_konsumen">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="nama_konsumen" type="varchar(30)">
+                <constraints unique="true" nullable="false" />
+            </column>
+            <column name="alamat" type="varchar(50)">
+                <constraints nullable="false" />
+            </column>
+            <column name="email" type="varchar(50)">
+                <constraints nullable="false" unique="true" />
+            </column>
+            <column name="no_telp" type="varchar(15)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        
+        <createTable tableName="t_penjualan_header">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="no_faktur" type="varchar(255)">
+                <constraints unique="true" nullable="false" />
+            </column>
+            <column name="tanggal" type="date">
+                <constraints nullable="false" />
+            </column>
+            <column name="id_konsumen" type="bigint">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        
+         <createTable tableName="t_penjualan_detail">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="id_header" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="kode_barang" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="qty" type="int">
+                <constraints nullable="false" />
+            </column>
+            <column name="harga" type="decimal(19,2)">
+                <constraints nullable="false" />
+            </column>
+            <column name="total" type="decimal(19,2)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        
+        <modifySql dbms="mysql">
+            <append value=" engine innodb" />
+        </modifySql>
+    </changeSet>
+    
+    
+    <changeSet id="3" author="adi">
+        <addForeignKeyConstraint 
+            baseTableName="t_penjualan_header"
+            constraintName="t_penjualan_header_fk1" 
+            baseColumnNames="id_konsumen"
+            referencedTableName="m_konsumen"
+            referencedColumnNames="id"/>
+            
+        <addForeignKeyConstraint 
+            baseTableName="t_penjualan_detail"
+            constraintName="t_penjualan_detail_fk1" 
+            baseColumnNames="id_header"
+            referencedTableName="t_penjualan_header"
+            referencedColumnNames="id"/>
+            
+        <addForeignKeyConstraint 
+            baseTableName="t_penjualan_detail"
+            constraintName="t_penjualan_detail_fk2" 
+            baseColumnNames="kode_barang"
+            referencedTableName="m_barang"
+            referencedColumnNames="id"/>
+    </changeSet>
+    
+    <changeSet id="4" author="adi">
+        <createIndex tableName="t_penjualan_detail"
+                     indexName="t_penjualan_detail_idx1"
+                     unique="true">
+            <column name="id_header" />
+            <column name="kode_barang" />
+        </createIndex>
+    </changeSet>
 </databaseChangeLog>

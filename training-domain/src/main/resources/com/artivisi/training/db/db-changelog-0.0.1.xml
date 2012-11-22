@@ -147,4 +147,22 @@
             <column name="kode_barang" />
         </createIndex>
     </changeSet>
+    
+    <changeSet id="5" author="adi">
+        <addAutoIncrement tableName="m_barang" 
+                          columnName="id" 
+                          columnDataType="bigint"/>
+                          
+        <addAutoIncrement tableName="m_konsumen" 
+                          columnName="id" 
+                          columnDataType="bigint"/>
+                          
+        <addAutoIncrement tableName="t_penjualan_header" 
+                          columnName="id" 
+                          columnDataType="bigint"/>
+                          
+        <addAutoIncrement tableName="t_penjualan_detail" 
+                          columnName="id" 
+                          columnDataType="bigint"/>
+    </changeSet>
 </databaseChangeLog>

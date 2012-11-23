@@ -1,0 +1,16 @@
+{
+    identifier:"id",
+    label:"name",
+    items: [
+        {
+            id:"MST",
+            name:"Master",
+            type:"menu",
+            children:[{
+                _reference:"BRG"
+            }]
+        },{
+            id:"BRG", name:'Barang', type:'mitem', action:'displayFormBarang'
+        }
+    ]
+}
